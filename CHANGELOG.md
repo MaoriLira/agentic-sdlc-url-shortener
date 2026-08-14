@@ -4,6 +4,40 @@ All notable changes to this project are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-08-13
+
+Adds structured application logging and a data-masking policy — ticket
+[`URL-601`](docs/Jira-Tickets/Epic-URL-600-Observability-Logging.md), branch
+`feature/URL-601-add-logs`.
+
+### Added
+
+- **Structured Logging** — SLF4J/Logback log statements across the API, service, and
+  exception-handling layers, with a defined level policy: `DEBUG` for routine hot-path
+  success, `INFO` for business events (create/delete), `WARN` for expected-but-notable
+  conditions (auth failures, rejected input, rate-limit breaches, 4xx responses), `ERROR` for
+  genuine failures.
+- **`GlobalExceptionHandler` catch-all** — a previously-unhandled exception now returns a
+  logged `500` instead of falling through to Spring Boot's default error page with no
+  application-level log line at all.
+- **Data-masking policy** — the `X-API-Key` header value and stored `api_key_hash` are never
+  logged, in any form; client IPs are masked to the last octet via the new
+  `util/LogSanitizer` before being logged. See
+  [`docs/Architecture-Decisions/ADR-13-Logging-and-Data-Masking-Policy.md`](docs/Architecture-Decisions/ADR-13-Logging-and-Data-Masking-Policy.md).
+- **`logback-spring.xml`** — a single consistent console pattern, replacing Spring Boot's
+  default; levels remain configurable via `logging.level.*` in `application.yml`.
+- **Tests** — `LogSanitizerTest` (IP-masking correctness) and `ApiKeyAuthServiceTest` (a real
+  Logback `ListAppender` attached to the class under test, proving the raw API key is absent
+  from every log event across all four authentication outcomes). Suite: 30 → 38 tests.
+
+### Not included (explicitly out of scope — see ADR-13)
+
+- JSON/machine-parseable log output — would require a new dependency
+  (`logstash-logback-encoder`) and its own ADR before adding.
+- Metrics/tracing instrumentation (success rate, MTTR, latency) — still
+  [R-8](docs/Risks/R-8-No-Observability-Instrumentation.md), still open. This release is logs
+  only.
+
 ## [1.0.0] - 2026-08-13
 
 Initial release. Built end-to-end through an Agentic Execution Model with human-in-the-loop
