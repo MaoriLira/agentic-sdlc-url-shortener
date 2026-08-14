@@ -71,6 +71,17 @@ data-masking policy so API keys and IPs never leak into logs. 1 ticket (URL-601)
 but distinct from, [[05-Risk-and-Failure-Scenario-Analysis#Risk register|R-8]] (metrics, still
 open — this ticket is logs only). **Status: Done.**
 
+### [[../Jira-Tickets/Epic-URL-700-Codebase-Modernization|Epic: URL-700 — Codebase Modernization]]
+
+Not a feature or a risk fix — a maintainability/DX request. Lombok on the 6 JPA entities
+(deliberately *not* on the DTO records, which are already boilerplate-free). 1 ticket
+(URL-701). **Status: Done.**
+
+### [[../Jira-Tickets/Epic-URL-800-Developer-Operations|Epic: URL-800 — Developer Operations & Runbooks]]
+
+Operational documentation gap, not a feature: how to connect to and diagnose Postgres, Redis,
+and Kafka once the local stack is running. 1 ticket (URL-801). **Status: Done.**
+
 ## Dependency graph
 
 ```mermaid
@@ -122,6 +133,8 @@ graph TD
 
     U103 -. instruments .-> U601[URL-601 Structured Logging]
     U104 -. instruments .-> U601
+
+    U402 -. refactors .-> U701[URL-701 Lombok Refactor]
 ```
 
 > [!tip] Parallel tracks
