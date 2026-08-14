@@ -1,6 +1,9 @@
 package com.example.urlshortener.service;
 
 import com.example.urlshortener.exception.RateLimitExceededException;
+import com.example.urlshortener.util.LogSanitizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +15,15 @@ import java.time.Instant;
  * key scoped to the current minute; the key's first writer sets a short-lived expiry so
  * old windows clean up automatically. Simpler than a true token bucket and sufficient for
  * the abuse-guard use case here (see ADR #8 for the configured thresholds).
+ *
+ * {@code identifier} is a client IP on the redirect path and a numeric client ID on the
+ * create path. It's masked before logging either way — {@link LogSanitizer#maskIp} is a
+ * no-op passthrough for anything that isn't an IPv4 address, so this is safe for both.
  */
 @Service
 public class RateLimiterService {
+
+    private static final Logger log = LoggerFactory.getLogger(RateLimiterService.class);
 
     private final StringRedisTemplate redisTemplate;
 
@@ -34,6 +43,8 @@ public class RateLimiterService {
 
         if (count != null && count > limitPerMinute) {
             long retryAfter = 60 - (nowEpochSeconds % 60);
+            log.warn("Rate limit exceeded: scope={} identifier={} limitPerMinute={}",
+                    scope, LogSanitizer.maskIp(identifier), limitPerMinute);
             throw new RateLimitExceededException(retryAfter);
         }
     }

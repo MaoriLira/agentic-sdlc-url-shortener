@@ -1,6 +1,6 @@
 # Agentic SDLC URL Shortener
 
-**Version 1.0.0** — see [`CHANGELOG.md`](CHANGELOG.md) for release history.
+**Version 1.1.0** — see [`CHANGELOG.md`](CHANGELOG.md) for release history.
 
 An enterprise-grade URL shortener — core APIs, Redis cache-aside, async Kafka analytics,
 PostgreSQL persistence — built end-to-end using an **Agentic Execution Model with
@@ -50,7 +50,7 @@ cd project
 ```
 
 > [!IMPORTANT]
-> Requires a running Docker daemon. This runs the full 30-test suite (unit, Mockito
+> Requires a running Docker daemon. This runs the full 38-test suite (unit, Mockito
 > fault-injection, and Testcontainers integration tests) — Testcontainers starts and stops
 > its own Postgres/Redis/Kafka containers automatically, independent of the `docker-compose`
 > stack below. If this passes, the build is verified healthy end to end.

@@ -17,6 +17,7 @@ cycle, all in one engagement.
 * [[Dashboards/04-Setup-and-Run]] - run it, test it.
 * [[Dashboards/05-Risk-and-Failure-Scenario-Analysis]] - risk register, quadrant chart.
 * [[Scenarios/B-Brownfield-Refactoring]] - governance vs. implementation, side by side.
+* [[Guardrails/Structured-Logging-and-Data-Masking]] - log level policy, API-key masking rule (URL-601).
 
 ## Phase timeline
 

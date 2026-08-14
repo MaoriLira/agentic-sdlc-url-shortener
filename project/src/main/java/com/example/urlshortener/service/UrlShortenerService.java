@@ -9,6 +9,8 @@ import com.example.urlshortener.exception.AliasConflictException;
 import com.example.urlshortener.exception.ShortUrlGoneException;
 import com.example.urlshortener.exception.ShortUrlNotFoundException;
 import com.example.urlshortener.repository.UrlMappingRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,16 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+/**
+ * Logs shortCode + owner id on create/delete (INFO — low-frequency, audit-worthy business
+ * events), never the long URL itself: a shortened URL can carry a third party's token or
+ * credential embedded in its query string, so it's treated as data, not a safe log field —
+ * see URL-601 / docs/Architecture-Decisions/ADR-13-Logging-and-Data-Masking-Policy.md.
+ */
 @Service
 public class UrlShortenerService {
+
+    private static final Logger log = LoggerFactory.getLogger(UrlShortenerService.class);
 
     private final UrlMappingRepository repository;
     private final ShortCodeGenerator codeGenerator;
@@ -62,9 +72,11 @@ public class UrlShortenerService {
         try {
             mapping = repository.saveAndFlush(mapping);
         } catch (DataIntegrityViolationException e) {
+            log.warn("Alias conflict on create: shortCode={} already active", shortCode);
             throw new AliasConflictException(shortCode);
         }
 
+        log.info("Created shortCode={} ownerClientId={} customAlias={}", shortCode, owner.getId(), isCustom);
         return UrlResponse.from(mapping, baseUrl);
     }
 
@@ -84,6 +96,7 @@ public class UrlShortenerService {
         mapping.setStatus(UrlStatus.DELETED);
         repository.save(mapping);
         cacheService.evict(shortCode);
+        log.info("Deleted shortCode={}", shortCode);
     }
 
     @Transactional(readOnly = true)

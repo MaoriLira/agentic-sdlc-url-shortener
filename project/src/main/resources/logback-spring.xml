@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--
+        URL-601: a single, consistent console pattern for the whole application, replacing
+        Spring Boot's default. Log LEVELS are deliberately not hardcoded here — they're set
+        via logging.level.* in application.yml so they stay environment-configurable without
+        touching this file. See docs/Architecture-Decisions/ADR-13-Logging-and-Data-Masking-Policy.md.
+    -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg%n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

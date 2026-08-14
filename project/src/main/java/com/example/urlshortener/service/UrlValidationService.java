@@ -2,6 +2,8 @@ package com.example.urlshortener.service;
 
 import com.example.urlshortener.config.AliasProperties;
 import com.example.urlshortener.exception.InvalidUrlException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.net.IDN;
@@ -20,6 +22,8 @@ import java.util.regex.Pattern;
  */
 @Service
 public class UrlValidationService {
+
+    private static final Logger log = LoggerFactory.getLogger(UrlValidationService.class);
 
     private static final int MAX_URL_LENGTH = 2048;
     private static final Set<String> ALLOWED_SCHEMES = Set.of("http", "https");
@@ -84,6 +88,7 @@ public class UrlValidationService {
                     || address.isSiteLocalAddress()
                     || address.isMulticastAddress()
                     || address.isAnyLocalAddress()) {
+                log.warn("Rejected longUrl targeting internal host={} (resolved to a private/internal address)", host);
                 throw new InvalidUrlException(
                         "longUrl resolves to a private/internal address and is not allowed");
             }

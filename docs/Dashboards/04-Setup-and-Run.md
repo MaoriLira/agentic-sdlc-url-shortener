@@ -75,12 +75,14 @@ cd project
 ./mvnw verify
 ```
 
-**30 tests**, all passing:
+**38 tests**, all passing:
 
 | Suite | Type | What it covers |
 |---|---|---|
 | `Base62EncoderTest` | Pure unit | Encoding correctness, uniqueness, edge cases |
 | `UrlValidationServiceTest` | Pure unit | Internal-target/open-redirect and scheme/length rules, alias rules |
+| `LogSanitizerTest` | Pure unit | IP masking correctness (URL-601) |
+| `ApiKeyAuthServiceTest` | Logback `ListAppender` capture | Proves the raw API key never appears in a log line, on any of the 4 auth outcomes (URL-601) |
 | `UrlCacheServiceTest` | Mockito fault injection | Cache-aside resilience — every Redis call site degrades gracefully instead of throwing (URL-502) |
 | `RateLimiterServiceTest` | Testcontainers (Redis) | Fixed-window limiting, per-identifier isolation |
 | `UrlShortenerIntegrationTest` | Testcontainers (Postgres+Redis+Kafka) | Full create → redirect → async-stats → delete lifecycle, deleted-alias reuse (URL-501), and 400/401/404/409/410 error paths |

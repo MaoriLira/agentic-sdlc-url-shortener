@@ -34,6 +34,15 @@ spring:
 server:
   port: 8080
 
+# URL-601: default level is INFO — hot-path DEBUG logs (redirect resolution, duplicate-event
+# skips) are intentionally silent by default so they don't flood output at the ADR-10 design
+# target (1,000 RPS redirect). Override locally for troubleshooting, e.g.:
+#   logging.level.com.example.urlshortener=DEBUG
+logging:
+  level:
+    root: INFO
+    com.example.urlshortener: INFO
+
 urlshortener:
   base-url: ${SHORT_BASE_URL:http://localhost:8080}
   cache:

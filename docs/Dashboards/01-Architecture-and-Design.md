@@ -109,6 +109,7 @@ Full Redis-fallback detail → [[../Guardrails/Cache-Aside-Graceful-Degradation]
 * [[../Architecture-Decisions/ADR-10-Scale-Target]] - 1,000 RPS redirect / 50 RPS create / 100M links.
 * [[../Architecture-Decisions/ADR-11-High-Availability-Approach]] - single-region prototype.
 * [[../Architecture-Decisions/ADR-12-Geo-Analytics-Scope]] - out of scope, field reserved.
+* [[../Architecture-Decisions/ADR-13-Logging-and-Data-Masking-Policy]] - SLF4J/Logback levels, API keys never logged.
 
 ⚠️ = required human approval; changes need the same checkpoint again, not a silent edit.
 
