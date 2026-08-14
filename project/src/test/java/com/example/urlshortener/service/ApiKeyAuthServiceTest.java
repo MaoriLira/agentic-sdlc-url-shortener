@@ -91,8 +91,7 @@ class ApiKeyAuthServiceTest {
 
     @Test
     void suspendedClientIsRejectedAndLoggedWithoutTheKey() {
-        ApiClient client = activeClient();
-        client.setStatus(ClientStatus.SUSPENDED);
+        ApiClient client = clientWithStatus(ClientStatus.SUSPENDED);
         when(apiClientRepository.findByApiKeyHash(anyString())).thenReturn(Optional.of(client));
 
         assertThatThrownBy(() -> authService.authenticate(RAW_API_KEY))
@@ -109,10 +108,15 @@ class ApiKeyAuthServiceTest {
     }
 
     private ApiClient activeClient() {
-        ApiClient client = new ApiClient();
-        client.setName("Test Client");
-        client.setApiKeyHash("irrelevant-hash-value");
-        client.setStatus(ClientStatus.ACTIVE);
-        return client;
+        return clientWithStatus(ClientStatus.ACTIVE);
+    }
+
+    // URL-701: builder instead of new ApiClient() + a chain of setters.
+    private ApiClient clientWithStatus(ClientStatus status) {
+        return ApiClient.builder()
+                .name("Test Client")
+                .apiKeyHash("irrelevant-hash-value")
+                .status(status)
+                .build();
     }
 }

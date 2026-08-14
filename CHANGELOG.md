@@ -30,6 +30,23 @@ Adds structured application logging and a data-masking policy — ticket
   Logback `ListAppender` attached to the class under test, proving the raw API key is absent
   from every log event across all four authentication outcomes). Suite: 30 → 38 tests.
 
+### Changed
+
+- **Lombok on the entity layer** — ticket
+  [`URL-701`](docs/Jira-Tickets/Epic-URL-700-Codebase-Modernization.md), branch
+  `feature/URL-701-lombok-refactor`. The 6 JPA entities (`UrlMapping`, `ApiClient`,
+  `ClickSummary`, `ClickDailyRollup`, `ClickDailyRollupId`, `ClickEventDlq`) now use
+  `@Getter`/`@Setter`/`@NoArgsConstructor`/`@AllArgsConstructor`, with `@Builder` on
+  `UrlMapping` and `ApiClient` specifically. `UrlShortenerService.create()` and
+  `ApiKeyAuthServiceTest` now build objects via `.builder()...build()` instead of `new X()` +
+  setter chains. Per-class annotation choice preserves each class's original encapsulation
+  (e.g. `ClickSummary` still has no setters — mutation stays `recordClick()`-only). DTOs
+  (`CreateUrlRequest`, `UrlResponse`, etc.) are untouched — they're already `record` types,
+  already boilerplate-free. See
+  [`docs/Architecture-Decisions/ADR-14-Lombok-Adoption-for-Domain-Models.md`](docs/Architecture-Decisions/ADR-14-Lombok-Adoption-for-Domain-Models.md).
+- New dependency: `org.projectlombok:lombok` (compile-time only, `<optional>true</optional>`,
+  never on the runtime classpath).
+
 ### Not included (explicitly out of scope — see ADR-13)
 
 - JSON/machine-parseable log output — would require a new dependency
