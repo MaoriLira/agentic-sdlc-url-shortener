@@ -64,6 +64,13 @@ PostgreSQL schema, repository layer, collision handling, indexing, and migration
 > The governance decision behind that narrowing is documented in
 > [[../Scenarios/B-Brownfield-Refactoring]]. **Status: Done (scoped).**
 
+### [[../Jira-Tickets/Epic-URL-600-Observability-Logging|Epic: URL-600 — Observability & Structured Logging]]
+
+Retroactive instrumentation of the already-shipped system: SLF4J log levels and a written
+data-masking policy so API keys and IPs never leak into logs. 1 ticket (URL-601). Related to,
+but distinct from, [[05-Risk-and-Failure-Scenario-Analysis#Risk register|R-8]] (metrics, still
+open — this ticket is logs only). **Status: Done.**
+
 ## Dependency graph
 
 ```mermaid
@@ -112,6 +119,9 @@ graph TD
 
     U402 --> U501[URL-501 Alias Reuse Fix]
     U302 --> U502[URL-502 Redis Degradation Fix]
+
+    U103 -. instruments .-> U601[URL-601 Structured Logging]
+    U104 -. instruments .-> U601
 ```
 
 > [!tip] Parallel tracks

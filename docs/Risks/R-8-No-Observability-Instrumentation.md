@@ -26,3 +26,9 @@ four numbers the requirements name is comparatively low effort for high payoff.
 **Effort:** Small–Medium. Proposed as priority 2 in the Phase 5 follow-up list — the
 highest-value item not selected for the Phase 6 brownfield batch, deliberately, to keep that
 batch small (see [[../Scenarios/B-Brownfield-Refactoring]]).
+
+> [!info] Related but distinct: URL-601 (logging)
+> [[../Jira-Tickets/Epic-URL-600-Observability-Logging|URL-601]] added SLF4J log levels and a
+> data-masking policy across the application. That's logs, not metrics — it doesn't touch
+> success rate, retry/rollback frequency, MTTR, or latency instrumentation. This risk remains
+> open.
