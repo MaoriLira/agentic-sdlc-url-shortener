@@ -1,0 +1,15 @@
+# Maven build output
+project/target/
+
+# OS
+.DS_Store
+
+# Obsidian local workspace state (window layout, open tabs — machine-specific)
+docs/.obsidian/
+docs/Untitled.canvas
+
+# Claude Code local session state
+.claude/
+
+# IntelliJ IDEA project config (machine-local)
+project/.idea/

@@ -1,0 +1,142 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-08-13T18:30:00.000Z",
+  "__export_source": "insomnia.desktop.app:v9.3.0",
+  "resources": [
+    {
+      "_id": "wrk_agentic_sdlc_url_shortener",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Agentic SDLC URL Shortener",
+      "description": "E2E lifecycle collection for the URL Shortener API. PREREQUISITE: the application must already be running locally at the Base Environment's base_url (default http://localhost:8080) before running these requests - start it with: docker-compose up -d (from the repo root), then DB_PORT=5435 ./mvnw spring-boot:run (from project/). DB_PORT=5435 is required because local Postgres is published on host port 5435, not the default 5432. See docs/00-Executive-Summary.md for the full architectural knowledge graph.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base_1a2b3c4d",
+      "_type": "environment",
+      "parentId": "wrk_agentic_sdlc_url_shortener",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:8080",
+        "api_key": "demo-key-12345",
+        "shortCode": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "api_key", "shortCode"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1755000000000
+    },
+    {
+      "_id": "jar_cookie_5e6f7a8b",
+      "_type": "cookie_jar",
+      "parentId": "wrk_agentic_sdlc_url_shortener",
+      "name": "Default Jar",
+      "cookies": []
+    },
+    {
+      "_id": "fld_e2e_lifecycle",
+      "_type": "request_group",
+      "parentId": "wrk_agentic_sdlc_url_shortener",
+      "name": "URL Shortener E2E Lifecycle",
+      "description": "Full create -> redirect -> metadata -> delete flow. Run this folder top to bottom (Insomnia: right-click folder -> 'Run'). Request 1 extracts shortCode into the environment; requests 2-4 consume it. Request 4 deletes the URL it created, so running the whole folder leaves the database clean.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1755000000000
+    },
+    {
+      "_id": "req_1_create_short_url",
+      "_type": "request",
+      "parentId": "fld_e2e_lifecycle",
+      "name": "1. Create Short URL",
+      "description": "POST /api/v1/urls - creates a short URL and extracts the generated shortCode into the environment for the rest of the folder to use.",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/v1/urls",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"longUrl\": \"https://github.com/anthropics/claude-code\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "X-API-Key", "value": "{{ _.api_key }}" }
+      ],
+      "authentication": {},
+      "metaSortKey": -1755000000000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "afterResponseScript": "// Extract the generated shortCode from the response body and store it\n// in the environment so requests 2-4 in this folder can chain off it.\nconst body = insomnia.response.json();\n\nif (!body || !body.shortCode) {\n  throw new Error('Create response did not contain a shortCode - got: ' + insomnia.response.text());\n}\n\ninsomnia.environment.set('shortCode', body.shortCode);\nconsole.log('Stored shortCode for downstream requests:', body.shortCode);"
+    },
+    {
+      "_id": "req_2_follow_redirect",
+      "_type": "request",
+      "parentId": "fld_e2e_lifecycle",
+      "name": "2. Follow Redirect",
+      "description": "GET /{shortCode} - expects 302 Found with a Location header pointing at the original longUrl. Redirect-following is turned off for this request so the 302 itself is visible/assertable rather than silently followed.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/{{ _.shortCode }}",
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1754999999000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "off"
+    },
+    {
+      "_id": "req_3_get_metadata",
+      "_type": "request",
+      "parentId": "fld_e2e_lifecycle",
+      "name": "3. Get Metadata",
+      "description": "GET /api/v1/urls/{shortCode} - returns the stored metadata (longUrl, createdAt, expiresAt, status) for the short code created in request 1. Click analytics live on a separate /stats endpoint, not covered by this request.",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/v1/urls/{{ _.shortCode }}",
+      "parameters": [],
+      "headers": [
+        { "name": "X-API-Key", "value": "{{ _.api_key }}" }
+      ],
+      "authentication": {},
+      "metaSortKey": -1754999998000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_4_delete_cleanup",
+      "_type": "request",
+      "parentId": "fld_e2e_lifecycle",
+      "name": "4. Delete (Cleanup)",
+      "description": "DELETE /api/v1/urls/{shortCode} - removes the short URL created in request 1, so running this folder end to end leaves no test data behind. Expect 204 No Content.",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/api/v1/urls/{{ _.shortCode }}",
+      "parameters": [],
+      "headers": [
+        { "name": "X-API-Key", "value": "{{ _.api_key }}" }
+      ],
+      "authentication": {},
+      "metaSortKey": -1754999997000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    }
+  ]
+}
