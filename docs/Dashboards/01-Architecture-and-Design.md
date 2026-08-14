@@ -110,6 +110,7 @@ Full Redis-fallback detail → [[../Guardrails/Cache-Aside-Graceful-Degradation]
 * [[../Architecture-Decisions/ADR-11-High-Availability-Approach]] - single-region prototype.
 * [[../Architecture-Decisions/ADR-12-Geo-Analytics-Scope]] - out of scope, field reserved.
 * [[../Architecture-Decisions/ADR-13-Logging-and-Data-Masking-Policy]] - SLF4J/Logback levels, API keys never logged.
+* [[../Architecture-Decisions/ADR-14-Lombok-Adoption-for-Domain-Models]] - entities only, not the DTO records. ⚠️ high-impact (new dependency)
 
 ⚠️ = required human approval; changes need the same checkpoint again, not a silent edit.
 

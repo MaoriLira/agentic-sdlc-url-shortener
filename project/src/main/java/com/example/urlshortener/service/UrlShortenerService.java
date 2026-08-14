@@ -62,12 +62,13 @@ public class UrlShortenerService {
             shortCode = codeGenerator.nextCode();
         }
 
-        UrlMapping mapping = new UrlMapping();
-        mapping.setShortCode(shortCode);
-        mapping.setLongUrl(request.longUrl());
-        mapping.setOwnerClientId(owner.getId());
-        mapping.setCustomAlias(isCustom);
-        mapping.setExpiresAt(request.expiresAt());
+        UrlMapping mapping = UrlMapping.builder()
+                .shortCode(shortCode)
+                .longUrl(request.longUrl())
+                .ownerClientId(owner.getId())
+                .customAlias(isCustom)
+                .expiresAt(request.expiresAt())
+                .build();
 
         try {
             mapping = repository.saveAndFlush(mapping);

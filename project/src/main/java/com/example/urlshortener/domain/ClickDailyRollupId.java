@@ -1,31 +1,23 @@
 package com.example.urlshortener.domain;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
+/**
+ * URL-701: composite JPA ID class — exactly the value-object boilerplate (equals/hashCode,
+ * constructors) Lombok is built for. No getters were exposed before Lombok and none are
+ * added now; JPA reads these fields via reflection.
+ */
+@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ClickDailyRollupId implements Serializable {
 
     private String shortCode;
     private LocalDate clickDate;
-
-    protected ClickDailyRollupId() {
-    }
-
-    public ClickDailyRollupId(String shortCode, LocalDate clickDate) {
-        this.shortCode = shortCode;
-        this.clickDate = clickDate;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ClickDailyRollupId that)) return false;
-        return Objects.equals(shortCode, that.shortCode) && Objects.equals(clickDate, that.clickDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(shortCode, clickDate);
-    }
 }
