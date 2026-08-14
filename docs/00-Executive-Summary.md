@@ -18,6 +18,7 @@ cycle, all in one engagement.
 * [[Dashboards/05-Risk-and-Failure-Scenario-Analysis]] - risk register, quadrant chart.
 * [[Scenarios/B-Brownfield-Refactoring]] - governance vs. implementation, side by side.
 * [[Guardrails/Structured-Logging-and-Data-Masking]] - log level policy, API-key masking rule (URL-601).
+* [[Runbooks/Infrastructure-Connectivity-Runbook]] - connect to and diagnose Postgres/Redis/Kafka directly (URL-801).
 
 ## Phase timeline
 

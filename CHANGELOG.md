@@ -30,6 +30,16 @@ Adds structured application logging and a data-masking policy — ticket
   Logback `ListAppender` attached to the class under test, proving the raw API key is absent
   from every log event across all four authentication outcomes). Suite: 30 → 38 tests.
 
+### Added (documentation)
+
+- **Infrastructure Connectivity Runbook** — ticket
+  [`URL-801`](docs/Jira-Tickets/Epic-URL-800-Developer-Operations.md), branch
+  `docs/URL-801-infrastructure-wiki`. How to connect to, verify, and query the local
+  Postgres/Redis/Kafka stack directly, specific to this application's schemas/key
+  namespaces/topics — every command in it was run against a real local stack while writing
+  it, not copied from memory —
+  [`docs/Runbooks/Infrastructure-Connectivity-Runbook.md`](docs/Runbooks/Infrastructure-Connectivity-Runbook.md).
+
 ### Not included (explicitly out of scope — see ADR-13)
 
 - JSON/machine-parseable log output — would require a new dependency

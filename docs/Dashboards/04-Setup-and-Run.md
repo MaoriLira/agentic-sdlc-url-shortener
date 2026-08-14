@@ -4,7 +4,7 @@ tags: [setup, testing, docker-compose, testcontainers]
 
 # Setup & Run
 
-Related: [[../00-Executive-Summary]] · [[01-Architecture-and-Design]] · [[../Scenarios/B-Brownfield-Refactoring]]
+Related: [[../00-Executive-Summary]] · [[01-Architecture-and-Design]] · [[../Scenarios/B-Brownfield-Refactoring]] · [[../Runbooks/Infrastructure-Connectivity-Runbook]]
 
 Source lives in `project/`. See [[01-Architecture-and-Design]] for what each piece does.
 
@@ -67,6 +67,9 @@ curl -X DELETE http://localhost:8080/api/v1/urls/1000000 -H "X-API-Key: demo-key
 ```
 
 Full API contract: OpenAPI spec from the Phase 3 design (matches this implementation exactly).
+
+Want to look inside Postgres/Redis/Kafka directly instead of just through the API? See
+[[../Runbooks/Infrastructure-Connectivity-Runbook]].
 
 ## Automated test suite
 
