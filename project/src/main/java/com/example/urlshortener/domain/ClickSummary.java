@@ -1,10 +1,21 @@
 package com.example.urlshortener.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.time.Instant;
 
+/**
+ * URL-701: no {@code @Setter}/{@code @Builder} here, deliberately — this class has never had
+ * any setters. Mutation only happens through {@link #recordClick}, which is the point: an
+ * external caller can't set {@code totalClicks} to an arbitrary value. See ADR-14.
+ */
 @Entity
 @Table(name = "click_summary", schema = "analytics")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClickSummary {
 
     @Id
@@ -17,24 +28,9 @@ public class ClickSummary {
     @Column(name = "last_clicked_at")
     private Instant lastClickedAt;
 
-    protected ClickSummary() {
-    }
-
     public ClickSummary(String shortCode) {
         this.shortCode = shortCode;
         this.totalClicks = 0;
-    }
-
-    public String getShortCode() {
-        return shortCode;
-    }
-
-    public long getTotalClicks() {
-        return totalClicks;
-    }
-
-    public Instant getLastClickedAt() {
-        return lastClickedAt;
     }
 
     public void recordClick(Instant clickedAt) {

@@ -1,11 +1,23 @@
 package com.example.urlshortener.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
+/**
+ * URL-701: {@code clickCount} has no setter — mutation only through {@link #increment}, same
+ * reasoning as {@link ClickSummary}. {@code topReferrer} keeps its setter since it always had
+ * one. See ADR-14.
+ */
 @Entity
 @Table(name = "click_daily_rollup", schema = "analytics")
 @IdClass(ClickDailyRollupId.class)
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClickDailyRollup {
 
     @Id
@@ -19,14 +31,12 @@ public class ClickDailyRollup {
     @Column(name = "click_count", nullable = false)
     private long clickCount;
 
+    @Setter
     @Column(name = "top_referrer")
     private String topReferrer;
 
     @Column(name = "geo_region", length = 10)
     private String geoRegion;
-
-    protected ClickDailyRollup() {
-    }
 
     public ClickDailyRollup(String shortCode, LocalDate clickDate) {
         this.shortCode = shortCode;
@@ -34,31 +44,7 @@ public class ClickDailyRollup {
         this.clickCount = 0;
     }
 
-    public String getShortCode() {
-        return shortCode;
-    }
-
-    public LocalDate getClickDate() {
-        return clickDate;
-    }
-
-    public long getClickCount() {
-        return clickCount;
-    }
-
     public void increment() {
         this.clickCount++;
-    }
-
-    public String getTopReferrer() {
-        return topReferrer;
-    }
-
-    public void setTopReferrer(String topReferrer) {
-        this.topReferrer = topReferrer;
-    }
-
-    public String getGeoRegion() {
-        return geoRegion;
     }
 }

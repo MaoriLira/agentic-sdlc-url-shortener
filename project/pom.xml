@@ -47,6 +47,14 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!-- URL-701: compile-time only (annotation processor); never on the runtime classpath.
+             No explicit version - managed by the spring-boot-starter-parent BOM. -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
